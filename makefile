@@ -49,7 +49,7 @@ nginx:
 laravel6:
 	mkdir -p ./laravel
 	@make up
-	$(dc) exec php composer create-project --prefer-dist laravel/laravel . "6.*"
+	$(dc) exec php composer create-project --prefer-dist laravel/laravel . "8.*"
 
 .PHONY: seed
 seed:
