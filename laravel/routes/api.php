@@ -33,3 +33,5 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::apiResource('users', TodoController::class)->only([
     'store'
 ]);
+
+Route::post('/login', [TodoController::class, 'login']);

@@ -1,6 +1,7 @@
 # Laravel8でTodo作る。
 
 ## migrations
+> https://readouble.com/laravel/8.x/ja/migrations.html
 
 ### テーブルを考える
 | 論理名 | 物理名  | 型  | 型の意味 |
@@ -21,7 +22,7 @@ php artisan make:model Todo --migration
 
 ### 作成したmigrationを編集する
 database/migrations/2021_11_15_084615_create_todos_table.php
-```
+```php
 public function up()
 {
     Schema::create('todos', function (Blueprint $table) {
@@ -39,16 +40,67 @@ public function up()
 > migrate実行順はファイル名の`2021_11_15_084615`<-ここの部分で判定される
 > 
 > 日付が早い順で実行される
-> 
-> https://readouble.com/laravel/8.x/ja/migrations.html
 
 ### ユーザのmigrationを触らない理由
 デフォルトのままで使用可能なのでそのまま使用する
 
+## seeders
+> https://readouble.com/laravel/8.x/ja/seeding.html
+
+### 必要なシーダを作成する
+```
+php artisan make:seeder UserSeeder
+php artisan make:seeder TodoSeeder
+```
+
+### テストデータを入れる
+
+/database/seeders/UserSeeder.php
+```php
+public function run()
+{
+    //
+    User::factory()->create([
+        'name' => 'test1',
+        'email' => 'test1@test.jp',
+        'password' => bcrypt('testtest')
+    ]);
+    DB::table('users')->insert([
+        'name' => 'test2',
+        'email' => 'test2@test.jp',
+        'password' => Hash::make('password')
+    ]);
+    User::factory()->count(3)->create();
+}
+```
+
+/database/seeders/TodoSeeder.php
+```php
+public function run()
+{
+    //
+    DB::table('todos')->insert([
+        'title' => 'hoge',
+        'detail' => 'hogehogehoge',
+        'user_id' => 1,
+    ]);
+}
+```
+
+/database/seeders/DatabaseSeeder.php
+```php
+public function run()
+{
+    // \App\Models\User::factory(10)->create();
+    $this->call(UserSeeder::class);
+    $this->call(TodoSeeder::class);
+}
+```
+
 ## routes
 
 ### routes/api.phpを編集する
-```
+```php
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('todo', TodoController::class)->only([
         'index', 'store', 'update', 'destroy', 'show'
@@ -61,6 +113,8 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::apiResource('users', TodoController::class)->only([
     'store'
 ]);
+
+Route::post('/login', [TodoController::class, 'login']);
 ```
 > onlyに使用するルートを宣言する。
 > 使用しないルートを宣言する方法もあるがonlyの方が分かりやすいので採用した。
@@ -81,21 +135,11 @@ Route::apiResource('users', TodoController::class)->only([
     - middleware('auth:sanctum')で囲ってい場所がログイン済み
 
 ## Models
+> https://readouble.com/laravel/8.x/ja/eloquent-relationships.html
 
 ### app/Models/User.php編集
-```
+```php
 use App\Models\Todo;
-
-~~~省略~~~
-
-/**
-* The attributes that are mass assignable.
-*
-* @var array
-*/
-protected $fillable = [
-    'name', 'email', 'password'
-];
 
 ~~~省略~~~
 
@@ -108,11 +152,9 @@ public function todo()
 }
 ```
 > fillableにデータを処理するカラムを指定する
->
-> https://readouble.com/laravel/8.x/ja/eloquent-relationships.html
 
 ### app/Models/Todo.php編集
-```
+```php
 /**
 * The attributes that are mass assignable.
 *
@@ -134,15 +176,57 @@ public function user()
 ## 確認用にフロント書く
 今回は省略
 
+## validation
+> https://readouble.com/laravel/8.x/ja/validation.html
+
+### 必要なフォームリクエスト作成する
+```
+php artisan make:request UserPostRequest
+```
+> 書くの面倒なので一つだけで許して。。。
+
+### 作成したのを編集
+app/Http/Requests/UserPostRequest.php
+```php
+public function authorize()
+{
+    return true;
+}
+
+public function rules()
+{
+    return [
+        'name' => 'required',
+        'email' => 'required|email',
+        'password' => 'required',
+    ];
+}
+```
+
 ## Controllers
-必要Controllerを作成する
+
+### 必要Controllerを作成する
 ```
 php artisan make:controller UserController --api
 php artisan make:controller TodoController --api
 ```
 
-app/Http/Controllers/TodoController
+app/Http/Controllers/UserController
+```php
+public function login(Request $request)
+{
+    if (Auth::attempt($request->all())) {
+        return Auth::user();
+    }
+
+    throw ValidationException::withMessages([
+        'email' => ['メールアドレスまたはパスワードが違います。'],
+    ]);
+}
 ```
+
+### app/Http/Controllers/TodoController
+```php
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;    // 一行追加、何かは以下リンクに記載している
 

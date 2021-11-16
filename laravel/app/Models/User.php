@@ -41,4 +41,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+    *   userの所有するtodoを取得
+    */
+    public function todo()
+    {
+        return $this->hasMany(Todo::class);
+    }
 }

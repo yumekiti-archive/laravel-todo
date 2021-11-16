@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
-use App\Model\User;
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
@@ -17,18 +18,16 @@ class UserSeeder extends Seeder
     public function run()
     {
         //
+        User::factory()->create([
+            'name' => 'test1',
+            'email' => 'test1@test.jp',
+            'password' => bcrypt('testtest')
+        ]);
         DB::table('users')->insert([
             'name' => 'test2',
             'email' => 'test2@test.jp',
             'password' => Hash::make('password')
         ]);
-        factory(User::class)->create([
-            'created_at' => new DateTime(),
-            'updated_at' => new DateTime(),
-            'name' => 'test2',
-            'email' => 'test2@test.jp',
-            'password' => bcrypt('testtest')
-        ]);
-        factory(User::class, 3)->create();
+        User::factory()->count(3)->create();
     }
 }
