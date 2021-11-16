@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\TodoController;
+use App\Http\Controllers\UserController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,8 +17,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('todo', TodoController::class)->only([
+        'index', 'store', 'update', 'destroy', 'show'
+    ]);
+    Route::apiResource('user', UserController::class)->only([
+        'store', 'update', 'destroy'
+    ]);
 });
 
-Route::get('/todo', [TodoController::class, 'index']);
+Route::apiResource('users', TodoController::class)->only([
+    'store'
+]);
