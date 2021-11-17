@@ -24,7 +24,8 @@
         <button @click="this.get">get</button>
         <button @click="this.post">post</button>
         <button @click="this.put">put</button>
-        <button @click="this.get">delete</button>
+        <button @click="this.delete">delete</button>
+        <button @click="this.login">login</button>
 
         <div>{{this.data}}</div>
 
@@ -64,17 +65,15 @@ export default {
         },
         post: function () {
             const postData = {
-                // title: this.title,
-                // detail: this.detail,
-                // name: this.name,
+                title: this.title,
+                detail: this.detail,
+                name: this.name,
                 email: this.email,
                 password: this.password,
             }
-            axios.get('/api/csrf-cookie').then(() => {
-                axios
-                    .post('/api/' + this.url, postData)
-                    .then(res => (this.data = res.data))
-            });
+            axios
+                .post('/api/' + this.url, postData)
+                .then(res => (this.data = res.data))
         },
         put: function () {
             const putData = {
@@ -88,6 +87,17 @@ export default {
                 .put('/api/' + this.url, putData)
                 .then(res => (this.data = res.data))
         },
+        login: function () {
+            const postData = {
+                email: this.email,
+                password: this.password,
+            }
+            axios.get('/api/csrf-cookie').then(() => {
+                axios
+                    .post('/api/' + this.url, postData)
+                    .then(res => (this.data = res.data))
+            });
+        }
     },
 }
 </script>

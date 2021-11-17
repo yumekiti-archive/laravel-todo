@@ -27,6 +27,13 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         //
+        return Auth::user()->
+        todo()->
+        create([
+            'title' => $request->input('title'),
+            'detail' => $request->input('detail'),
+            'user_id' => Auth::user()->id,
+        ]);
     }
 
     /**
@@ -38,6 +45,9 @@ class TodoController extends Controller
     public function show($id)
     {
         //
+        return Auth::user()->
+        todo()->
+        find($id);
     }
 
     /**
@@ -50,6 +60,14 @@ class TodoController extends Controller
     public function update(Request $request, $id)
     {
         //
+        return Auth::user()->
+        todo()->
+        find($id)->
+        update([
+            'title' => $request->input('title'),
+            'detail' => $request->input('detail'),
+            'user_id' => Auth::user()->id,
+        ]);
     }
 
     /**
@@ -61,5 +79,9 @@ class TodoController extends Controller
     public function destroy($id)
     {
         //
+        return Auth::user()->
+        todo()->
+        find($id)->
+        delete();
     }
 }

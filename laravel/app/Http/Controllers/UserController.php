@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\UserPostRequest;
 
+use App\Models\User;
+
 class UserController extends Controller
 {
     /**
@@ -29,6 +31,11 @@ class UserController extends Controller
     public function store(UserPostRequest $request)
     {
         //
+        return User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+        ]);
     }
 
     /**
@@ -52,6 +59,12 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         //
+        return Auth::user()->
+        update([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+        ]);
     }
 
     /**
@@ -63,6 +76,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+        return Auth::user()->delete();
     }
 
     public function login(Request $request)
