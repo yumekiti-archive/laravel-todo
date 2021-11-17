@@ -204,6 +204,7 @@ public function rules()
 ```
 
 ## Controllers
+> https://zenn.dev/naoki_oshiumi/articles/8fc5b9d20bcc89
 
 ### 必要Controllerを作成する
 ```
@@ -213,6 +214,12 @@ php artisan make:controller TodoController --api
 
 app/Http/Controllers/UserController
 ```php
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+use App\Http\Requests\UserPostRequest;
+
+~~~省略~~~
+
 public function login(Request $request)
 {
     if (Auth::attempt($request->all())) {
@@ -238,6 +245,8 @@ public function index()
     return Auth::user()->todo()->get();
 }
 ```
+> Authについて
+>
 > https://readouble.com/laravel/8.x/ja/authentication.html
 
 
@@ -251,5 +260,3 @@ public function index()
   - https://github.com/youyingxiang/livewire-blog
   - https://github.com/savanihd/laravel-8-roles-and-permissions
   - https://github.com/GiantVlad/laravel_shop_cart
-- [routes](##routes)
-  - https://zenn.dev/naoki_oshiumi/articles/8fc5b9d20bcc89

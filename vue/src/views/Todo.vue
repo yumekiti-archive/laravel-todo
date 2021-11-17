@@ -26,9 +26,8 @@
         <button @click="this.put">put</button>
         <button @click="this.get">delete</button>
 
-        <div>
-            <p>{{this.data}}</p>
-        </div>
+        <div>{{this.data}}</div>
+
     </div>
 </template>
 
@@ -41,6 +40,7 @@ export default {
         return {
             url: '',
             data: null,
+            posts: '',
             title: '',
             detail: '',
             name: '',
@@ -49,29 +49,34 @@ export default {
         }
     },
     methods: {
-        get: async () => {
-            await axios
+        get: function () {
+            axios
                 .get('/api/' + this.url)
-                .then(res => (this.data = res))
+                .then(res => (this.data = res.data))
+                .catch((err) => {
+                    console.log(err);
+                });
         },
-        delete: async () => {
-            await axios
+        delete: function () {
+            axios
                 .delete('/api/' + this.url)
-                .then(res => (this.data = res))
+                .then(res => (this.data = res.data))
         },
-        post: async () => {
+        post: function () {
             const postData = {
-                title: this.title,
-                detail: this.detail,
-                name: this.name,
+                // title: this.title,
+                // detail: this.detail,
+                // name: this.name,
                 email: this.email,
                 password: this.password,
             }
-            await axios
-                .post('/api/' + this.url, postData)
-                .then(res => (this.data = res))
+            axios.get('/api/csrf-cookie').then(() => {
+                axios
+                    .post('/api/' + this.url, postData)
+                    .then(res => (this.data = res.data))
+            });
         },
-        put: async () => {
+        put: function () {
             const putData = {
                 title: this.title,
                 detail: this.detail,
@@ -79,9 +84,9 @@ export default {
                 email: this.email,
                 password: this.password,
             }
-            await axios
+            axios
                 .put('/api/' + this.url, putData)
-                .then(res => (this.data = res))
+                .then(res => (this.data = res.data))
         },
     },
 }

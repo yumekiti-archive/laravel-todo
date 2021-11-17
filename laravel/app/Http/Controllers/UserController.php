@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-
-use App\Requests\UserPostRequest;
+use App\Http\Requests\UserPostRequest;
 
 class UserController extends Controller
 {
@@ -18,6 +17,7 @@ class UserController extends Controller
     public function index()
     {
         //
+        return Auth::user();
     }
 
     /**
@@ -26,7 +26,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserPostRequest $request)
     {
         //
     }
@@ -65,7 +65,7 @@ class UserController extends Controller
         //
     }
 
-    public function login(UserPostRequest $request)
+    public function login(Request $request)
     {
         if (Auth::attempt($request->all())) {
             return Auth::user();
@@ -74,5 +74,6 @@ class UserController extends Controller
         throw ValidationException::withMessages([
             'email' => ['メールアドレスまたはパスワードが違います。'],
         ]);
+
     }
 }

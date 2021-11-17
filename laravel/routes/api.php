@@ -26,7 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
         'index', 'store', 'update', 'destroy', 'show'
     ]);
     Route::apiResource('user', UserController::class)->only([
-        'store', 'update', 'destroy'
+        'index', 'update', 'destroy'
     ]);
 });
 
@@ -34,4 +34,8 @@ Route::apiResource('users', TodoController::class)->only([
     'store'
 ]);
 
-Route::post('/login', [TodoController::class, 'login']);
+Route::post('/login', [UserController::class, 'login']);
+
+Route::get('/', function () {
+    return 'Hello World';
+});
