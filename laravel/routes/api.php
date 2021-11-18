@@ -30,7 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     ]);
 });
 
-Route::apiResource('users', TodoController::class)->only([
+Route::apiResource('user', UserController::class)->only([
     'store'
 ]);
 

@@ -84,10 +84,5 @@ class UserController extends Controller
         if (Auth::attempt($request->all())) {
             return Auth::user();
         }
-
-        throw ValidationException::withMessages([
-            'email' => ['メールアドレスまたはパスワードが違います。'],
-        ]);
-
     }
 }
