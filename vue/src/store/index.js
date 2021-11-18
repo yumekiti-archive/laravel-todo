@@ -6,36 +6,59 @@ export default createStore({
         data: [],
     },
     mutations: {
-        set: (state, {response, url}) => {
-            if(!state.data[url]){
-                state.data[url] = response.data
-            }else{
-                state.data[url].push(response.data)
+        set: (state, {response, url, httpMethod}) => {
+            switch(httpMethod) {
+                case 'get': {
+                    state.data[url] = response.data
+                    break
+                }
+                case 'post': {
+                    state.data[url].push(response.data)
+                    break
+                }
+                case 'put': {
+                    state.data[url].push(response.data)
+                    break
+                }
+                case 'delete': {
+                    state.data[url.substring(0, url.indexOf("/"))] = state.data[url.substring(0, url.indexOf("/"))].filter(item => {if(item.id != response.data) return true})
+                    break
+                }
             }
         },
     },
     actions: {
-    async get({ commit }, {url: url}){
-        await axios
-            .get('/api/' + url, {url: url})
-            .then( response =>{
-                commit('set', {response: response, url: url});
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    },
-    async post({ commit }, {url: url, formData: formData}){
-        formData.url = url
-        await axios
-            .post('/api/' + url, formData)
-            .then( response =>{
-                commit('set', {response: response, url: url});
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    },
+        async get({ commit }, {url: url}){
+            await axios
+                .get('/api/' + url, {url: url})
+                .then( response =>{
+                    commit('set', {response: response, url: url, httpMethod: 'get'})
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        async post({ commit }, {url: url, formData: formData}){
+            formData.url = url
+            await axios
+                .post('/api/' + url, formData)
+                .then( response =>{
+                    commit('set', {response: response, url: url, httpMethod: 'post'})
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        async delete({ commit }, {url: url}){
+            await axios
+                .delete('/api/' + url, {url: url})
+                .then( response =>{
+                    commit('set', {response: response, url: url, httpMethod: 'delete'})
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
     },
     modules: {
     }

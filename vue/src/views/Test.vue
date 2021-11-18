@@ -57,14 +57,16 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
+            console.log(this.data)
         },
         delete: function () {
             axios
                 .delete('/api/' + this.url)
                 .then(res => (this.data = res.data))
+            console.log(this.data)
         },
         post: function () {
-            const postData = {
+            const formData = {
                 title: this.title,
                 detail: this.detail,
                 name: this.name,
@@ -72,11 +74,12 @@ export default {
                 password: this.password,
             }
             axios
-                .post('/api/' + this.url, postData)
+                .post('/api/' + this.url, formData)
                 .then(res => (this.data = res.data))
+            console.log(this.data)
         },
         put: function () {
-            const putData = {
+            const formData = {
                 title: this.title,
                 detail: this.detail,
                 name: this.name,
@@ -84,8 +87,9 @@ export default {
                 password: this.password,
             }
             axios
-                .put('/api/' + this.url, putData)
+                .put('/api/' + this.url, formData)
                 .then(res => (this.data = res.data))
+            console.log(this.data)
         },
         login() {
             const postData = {
@@ -97,6 +101,7 @@ export default {
                     .post('/api/' + this.url, postData)
                     .then(res => (this.data = res.data))
             });
+            console.log(this.data)
         }
     },
 }
