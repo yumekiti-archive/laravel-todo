@@ -9,7 +9,11 @@ export default createStore({
         set: (state, {response, url, httpMethod}) => {
             switch(httpMethod) {
                 case 'get': {
-                    state.data[url] = response.data
+                    if(url.match(/\//)){
+                        state.data[url.substring(0, url.indexOf("/"))] = response.data
+                    }else{
+                        state.data[url] = response.data
+                    }
                     break
                 }
                 case 'post': {
@@ -17,7 +21,7 @@ export default createStore({
                     break
                 }
                 case 'put': {
-                    state.data[url].push(response.data)
+                    state.data[url.substring(0, url.indexOf("/"))] = response.data
                     break
                 }
                 case 'delete': {
@@ -44,6 +48,17 @@ export default createStore({
                 .post('/api/' + url, formData)
                 .then( response =>{
                     commit('set', {response: response, url: url, httpMethod: 'post'})
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        },
+        async put({ commit }, {url: url, formData: formData}){
+            formData.url = url
+            await axios
+                .put('/api/' + url, formData)
+                .then( response =>{
+                    commit('set', {response: response, url: url, httpMethod: 'put'})
                 })
                 .catch(error => {
                     console.log(error)

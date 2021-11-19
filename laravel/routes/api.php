@@ -22,9 +22,14 @@ use App\Http\Controllers\UserController;
 // });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/todo/trashed', [TodoController::class, 'trashed']);
+    Route::delete('/todo/forceDelete/{id}', [TodoController::class, 'forceDelete']);
+    Route::get('/todo/restore/{id}', [TodoController::class, 'restore']);
+
     Route::apiResource('todo', TodoController::class)->only([
         'index', 'store', 'update', 'destroy', 'show'
     ]);
+
     Route::apiResource('user', UserController::class)->only([
         'index', 'update', 'destroy'
     ]);

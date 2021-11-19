@@ -60,14 +60,17 @@ class TodoController extends Controller
     public function update(Request $request, $id)
     {
         //
-        return Auth::user()->
+        $todo = Auth::user()->
         todo()->
-        find($id)->
-        update([
+        find($id);
+        
+        $todo->update([
             'title' => $request->input('title'),
             'detail' => $request->input('detail'),
             'user_id' => Auth::user()->id,
         ]);
+
+        return $todo;
     }
 
     /**
@@ -83,6 +86,37 @@ class TodoController extends Controller
         todo()->
         find($id)->
         delete();
+        
         return $id;
+    }
+
+    public function trashed(){
+        return Auth::user()->
+        todo()->
+        onlyTrashed()->
+        get();
+    }
+
+    public function forceDelete($id){
+        Auth::user()->
+        todo()->
+        onlyTrashed()->
+        find($id)->
+        forceDelete();
+
+        return $id;
+    }
+
+    public function restore($id){
+        Auth::user()->
+        todo()->
+        onlyTrashed()->
+        find($id)->
+        restore();
+
+        return Auth::user()->
+        todo()->
+        onlyTrashed()->
+        get();
     }
 }

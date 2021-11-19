@@ -1,32 +1,31 @@
 <template>
     <div>
         <Navigation />
-        <TodoForm :putStatus="false" />
-        <TodoList :todos="this.todos" :done="false" />
-        {{this.todos}}
+        <TodoForm :putStatus="true"/>
+        <TodoDetail :todo="this.todo"/>
+        {{todo}}
     </div>
 </template>
-
 <script>
-import TodoList from '@/components/TodoList.vue'
 import TodoForm from '@/components/TodoForm.vue'
 import Navigation from '@/components/Navigation.vue'
+import TodoDetail from '@/components/TodoDetail.vue'
 
 export default {
-    name: 'Todo',
+    name: 'Detail',
     components: {
-        TodoList,
         TodoForm,
         Navigation,
+        TodoDetail,
     },
     computed: {
-        todos() {
+        todo() {
             return this.$store.state.data.todo;
         },
     },
     created(){
         this.$store.state.data.todo = null
-        this.$store.dispatch('get', {url: 'todo'});
+        this.$store.dispatch('get', {url: 'todo/' + this.$route.params.id});
     },
 }
 </script>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\UserPostRequest;
+use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
 
@@ -34,7 +35,7 @@ class UserController extends Controller
         return User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
-            'password' => $request->input('password'),
+            'password' => Hash::make($request->input('password')),
         ]);
     }
 
