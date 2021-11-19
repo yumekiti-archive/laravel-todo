@@ -4,11 +4,17 @@ import Test from '../views/Test.vue'
 import Todo from '../views/Todo.vue'
 import Done from '../views/Done.vue'
 import Detail from '../views/Detail.vue'
+import Login from '../views/Login.vue'
 
 const routes = [
   {
     path: '/',
     redirect: '/todo'
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
   },
   {
     path: '/todo',
