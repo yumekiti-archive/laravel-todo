@@ -14,10 +14,10 @@ export default {
         }
         axios.get('/api/csrf-cookie').then(() => {
             axios
-                .post('/api/' + this.url, formData)
+                .post('/api/login', formData)
                 .then(res => (this.data = res.data))
         });
-        this.$router.push('Todo')
+        this.$router.push('todo')
     },
 }
 </script>
